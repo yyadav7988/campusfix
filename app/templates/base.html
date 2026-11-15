@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CampusFix{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+    <script src="{{ url_for('static', path='/js/main.js') }}" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+        <nav aria-label="Main navigation">
+            <a class="brand" href="{{ url_for('home') }}">CampusFix</a>
+            <a href="{{ url_for('report') }}">Report an issue</a>
+            <a href="{{ url_for('track') }}">Track an issue</a>
+            {% if request.session.get('admin') %}
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <form class="logout-form" method="post" action="{{ url_for('admin_logout') }}">
+                <input type="hidden" name="csrf" value="{{ request.session.get('csrf', '') }}">
+                <button type="submit" class="button secondary">Sign out</button>
+            </form>
+            {% else %}
+            <a href="{{ url_for('admin_login') }}">Admin sign in</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main id="main">{% block content %}{% endblock %}</main>
+    <footer>CampusFix &middot; Campus maintenance</footer>
+</body>
+</html>

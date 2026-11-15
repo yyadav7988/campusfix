@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Ticket not found | CampusFix{% endblock %}
+{% block content %}
+<section class="panel">
+    <h1>Ticket not found</h1>
+    <p>No ticket matches this reference. Check the full ticket ID and try again.</p>
+    <a href="{{ url_for('track') }}">Enter a ticket ID</a>
+</section>
+{% endblock %}

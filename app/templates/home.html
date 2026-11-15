@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+    <h1>Campus maintenance</h1>
+    <p>Report a maintenance issue or check the progress of an existing request.</p>
+    <p class="notice">Keep your ticket ID after submitting an issue so you can check its status later.</p>
+    <div class="actions">
+        <a class="button" href="{{ url_for('report') }}">Report an issue</a>
+        <a class="button secondary" href="{{ url_for('track') }}">Track an issue</a>
+    </div>
+</section>
+{% endblock %}
