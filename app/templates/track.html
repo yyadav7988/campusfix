@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Track an issue | CampusFix{% endblock %}
+{% block content %}
+<section class="panel">
+    <h1>Track an issue</h1>
+    <p>Enter the ticket ID saved when you submitted your issue.</p>
+    <form method="get" action="{{ url_for('track') }}">
+        <div class="field">
+            <label for="ticket_id">Ticket ID</label>
+            <input id="ticket_id" name="ticket_id" value="{{ ticket_id }}" required maxlength="36" spellcheck="false"
+                {% if error %}aria-invalid="true" aria-describedby="ticket-error"{% endif %}>
+            {% if error %}<p class="error" id="ticket-error" role="alert">{{ error }}</p>{% endif %}
+        </div>
+        <button class="button" type="submit">Find ticket</button>
+    </form>
+</section>
+{% endblock %}

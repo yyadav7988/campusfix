@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Admin sign in | CampusFix{% endblock %}
+{% block content %}
+<section class="panel narrow">
+    <p class="eyebrow">Staff access</p>
+    <h1>Admin sign in</h1>
+    <p class="notice">Manage maintenance requests and update their progress.</p>
+    {% if error %}<p class="error-summary" id="login-error" role="alert">{{ error }}</p>{% endif %}
+    {% if enabled %}
+    <form method="post" action="{{ url_for('admin_sign_in') }}">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <div class="field">
+            <label for="password">Admin password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required
+                {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+        </div>
+        <button class="button" type="submit">Sign in</button>
+    </form>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Maintenance dashboard | CampusFix{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><p class="eyebrow">Facilities operations</p><h1>Maintenance dashboard</h1></div>
+    <p class="notice">All ticket timestamps are UTC.</p>
+</div>
+<section class="summary-grid" aria-label="All ticket counts">
+    {% for status in statuses %}
+    <div class="summary-item"><span>{{ status }}</span><strong>{{ counts.get(status, 0) }}</strong></div>
+    {% endfor %}
+</section>
+<section class="panel">
+    <h2>Tickets</h2>
+    <p class="notice">Counts above include all tickets. Filters apply to the list below.</p>
+    <form method="get" action="{{ url_for('admin_dashboard') }}" class="filter-form">
+        {% for name, label, options in [('status', 'Status', statuses), ('priority', 'Priority', priorities), ('category', 'Category', categories)] %}
+        <div class="field">
+            <label for="{{ name }}">{{ label }}</label>
+            <select id="{{ name }}" name="{{ name }}">
+                <option value="">All {{ label|lower }}</option>
+                {% for option in options %}<option {% if filters[name] == option %}selected{% endif %}>{{ option }}</option>{% endfor %}
+            </select>
+        </div>
+        {% endfor %}
+        <button class="button" type="submit">Apply filters</button>
+        <a href="{{ url_for('admin_dashboard') }}">Clear filters</a>
+    </form>
+    <p class="list-count">{{ tickets|length }} ticket{% if tickets|length != 1 %}s{% endif %} shown</p>
+    {% if tickets %}
+    <div class="table-scroll" role="region" aria-label="Maintenance tickets" tabindex="0">
+        <table>
+            <caption class="sr-only">Maintenance tickets matching the selected filters</caption>
+            <thead><tr><th scope="col">Ticket / location</th><th scope="col">Category</th><th scope="col">Status</th><th scope="col">Priority</th><th scope="col">Created (UTC)</th><th scope="col">Action</th></tr></thead>
+            <tbody>{% for ticket in tickets %}
+                <tr>
+                    <td><span class="location">{{ ticket.building }} · {{ ticket.room }}</span><span class="ticket-reference">{{ ticket.id }}</span></td>
+                    <td>{{ ticket.category }}</td>
+                    <td><span class="status-label status-{{ ticket.status|lower|replace(' ', '-') }}">{{ ticket.status }}</span></td>
+                    <td>{{ ticket.priority }}</td>
+                    <td class="nowrap">{{ ticket.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td><a href="{{ url_for('admin_ticket', ticket_id=ticket.id) }}" aria-label="Manage ticket {{ ticket.id }}">Manage</a></td>
+                </tr>
+            {% endfor %}</tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><h3>No tickets to display</h3><p>No tickets match these filters, or no issues have been reported yet.</p></div>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Report an issue | CampusFix{% endblock %}
+{% block content %}
+<section class="panel">
+    <h1>Report an issue</h1>
+    <p>Describe the location and maintenance problem. Do not include names, email addresses, or phone numbers.</p>
+    {% if errors %}<div class="error-summary" role="alert">Your issue was not submitted. Please check the messages below.
+    {% if errors.get('save') %}<p>{{ errors['save'] }}</p>{% endif %}</div>{% endif %}
+    <form method="post" action="{{ url_for('submit_report') }}">
+        {% for field, label, limit in [('building', 'Building', 100), ('room', 'Room or location', 50)] %}
+        <div class="field">
+            <label for="{{ field }}">{{ label }}</label>
+            <input id="{{ field }}" name="{{ field }}" value="{{ values.get(field, '') }}" required maxlength="{{ limit }}"
+                {% if errors.get(field) %}aria-invalid="true" aria-describedby="{{ field }}-error"{% endif %}>
+            {% if errors.get(field) %}<p class="error" id="{{ field }}-error">{{ errors[field] }}</p>{% endif %}
+        </div>
+        {% endfor %}
+        <div class="field">
+            <label for="category">Category</label>
+            <select id="category" name="category" required {% if errors.get('category') %}aria-invalid="true" aria-describedby="category-error"{% endif %}>
+                <option value="">Choose a category</option>
+                {% for category in categories %}<option value="{{ category }}" {% if values.get('category') == category %}selected{% endif %}>{{ category }}</option>{% endfor %}
+            </select>
+            {% if errors.get('category') %}<p class="error" id="category-error">{{ errors['category'] }}</p>{% endif %}
+        </div>
+        <div class="field">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="6" maxlength="2000" required {% if errors.get('description') %}aria-invalid="true" aria-describedby="description-error"{% endif %}>{{ values.get('description', '') }}</textarea>
+            {% if errors.get('description') %}<p class="error" id="description-error">{{ errors['description'] }}</p>{% endif %}
+        </div>
+        <button class="button" type="submit">Submit issue</button>
+    </form>
+</section>
+{% endblock %}
